@@ -192,7 +192,7 @@ class FileImport
 						$('#csv_output').DataTable();
 					} );
 				</script>
-				<?	
+				<?php	
 			}
 			?>
 			</div>
