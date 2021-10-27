@@ -33,6 +33,8 @@ class ArtikelController
             } else {
                 $output = Core::readFile($File);
 
+				Dump($output);
+
                 $ArrayData = Core::CsvToArray($output);
                 foreach ($ArrayData as $BELEGNUMMER => $DATASET) {
                     foreach ($DATASET as $key => $VALUES) {
