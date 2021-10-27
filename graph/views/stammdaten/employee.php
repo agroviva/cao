@@ -1,6 +1,7 @@
-<?php if (!CAO_API) {die();}
+<?php if (!CAO_API) {
+    exit();
+}
 use AgroEgw\DB;
-use CAO\Request;
 use CAO\Core\Mitarbeiter;
 
 ?>
@@ -12,14 +13,13 @@ use CAO\Core\Mitarbeiter;
 <script type="text/javascript" src="/egroupware/cao/js/lib/jquery-ui.js"></script>
 <script type="text/javascript" src="/egroupware/cao/js/lib/sweetalert.min.js"></script>
 
-<?php  
+<?php
 if (!PREMISSION) {
-	?>
+    ?>
 	<h3>Sie habe keinen Zugriff auf dieser Seite</h3>
 	<?php
 } else {
-	$CaoMitarbeiter = Mitarbeiter::all();
-	?>
+        $CaoMitarbeiter = Mitarbeiter::all(); ?>
 	<div id="Mitarbeiter" style="margin: 0 auto;width: 840px;">
 		<table>
 			<thead>
@@ -29,7 +29,7 @@ if (!PREMISSION) {
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($CaoMitarbeiter as $key => $Mitarbeiter){ ?>
+				<?php foreach ($CaoMitarbeiter as $key => $Mitarbeiter) { ?>
 				<tr>
 					<td><?php echo $Mitarbeiter['ANZEIGE_NAME']?></td>
 					<td>
@@ -40,21 +40,20 @@ if (!PREMISSION) {
 						</ul>
 						<div id="<?php echo $Mitarbeiter['MA_ID']?>" class="addresses">
 							<?php
-							$MB = (new DB("SELECT * FROM egw_cao_meta WHERE meta_name = 'mitarbeiter' AND meta_data = '$Mitarbeiter[MA_ID]'"))->FetchAll();
-							if ($MB) {
-								foreach ($MB as $key => $data) {
-									$query = "SELECT n_given, n_family FROM egw_addressbook WHERE account_id = '$data[meta_connection_id]'";
-									$address = (new DB($query))->Fetch();
-									$fullname = $address['n_family'].", ".$address['n_given'];
-									?>
+                            $MB = (new DB("SELECT * FROM egw_cao_meta WHERE meta_name = 'mitarbeiter' AND meta_data = '$Mitarbeiter[MA_ID]'"))->FetchAll();
+                            if ($MB) {
+                                foreach ($MB as $key => $data) {
+                                    $query = "SELECT n_given, n_family FROM egw_addressbook WHERE account_id = '$data[meta_connection_id]'";
+                                    $address = (new DB($query))->Fetch();
+                                    $fullname = $address['n_family'].', '.$address['n_given']; ?>
 										<div id="<?php echo $data['meta_connection_id']?>" class="address active" onclick="setUser(this)">
 											<p><?php echo $fullname?></p>
 											<span class="delete">×</span>
 										</div>
 									<?php
-								}
-							}
-							?>
+                                }
+                            }
+                            ?>
 						</div>
 					</td>
 				</tr>
@@ -128,4 +127,4 @@ if (!PREMISSION) {
 		}
 	</script>
 	<?php
-}
+    }

@@ -1,4 +1,5 @@
 <?php
+
 namespace CAO\Controllers;
 
 use AgroEgw\DB;
@@ -6,8 +7,9 @@ use EGroupware\Api\Cache;
 
 class SaveSettings
 {
-	public static function upload(){
-		$Data = (new DB("SELECT * FROM egw_cao_meta WHERE meta_name LIKE 'settings'"))->Fetch();
+    public static function upload()
+    {
+        $Data = (new DB("SELECT * FROM egw_cao_meta WHERE meta_name LIKE 'settings'"))->Fetch();
 
         if (!empty($_POST)) {
             header('Content-Type: application/json');
@@ -24,17 +26,17 @@ class SaveSettings
 
             $Data = (new DB("SELECT * FROM egw_cao_meta WHERE meta_name LIKE 'settings'"))->Fetch();
             if (!empty($Data)) {
-                echo json_encode(array(
-                    "responde" => "success",
-                    "data"  => json_encode($Data)
-                ));
+                echo json_encode([
+                    'responde' => 'success',
+                    'data'     => json_encode($Data),
+                ]);
             } else {
-                echo json_encode(array(
-                    "responde" => "failure",
-                    "data"  => json_encode($Data)
-                ));
-            }	
+                echo json_encode([
+                    'responde' => 'failure',
+                    'data'     => json_encode($Data),
+                ]);
+            }
             exit;
         }
-	}
+    }
 }

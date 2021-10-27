@@ -10,27 +10,27 @@ use EGroupware\Api\Cache;
 
 class progress
 {
-	public $public_functions = [
-		'init'		=> true,
-	];
+    public $public_functions = [
+        'init'		=> true,
+    ];
 
-	public function __construct()
-	{
-	}
+    public function __construct()
+    {
+    }
 
-	public function init()
-	{
-		ob_get_clean();
-		ob_get_contents();
-		// while (true) {
-		// Send it in a message
-		// echo "data: " . json_encode(Cache::getSession('cao', 'job_progress')) . "\n\n";
-		echo json_encode(Cache::getSession('cao', 'job_progress'));
-		ob_flush();
-		flush();
-		exit;
+    public function init()
+    {
+        ob_get_clean();
+        ob_get_contents();
+        // while (true) {
+        // Send it in a message
+        // echo "data: " . json_encode(Cache::getSession('cao', 'job_progress')) . "\n\n";
+        echo json_encode(Cache::getSession('cao', 'job_progress'));
+        ob_flush();
+        flush();
+        exit;
 
-		// sleep(2);
-		// }
-	}
+        // sleep(2);
+        // }
+    }
 }

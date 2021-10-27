@@ -8,8 +8,9 @@ class LieferscheinCollection extends DefaultCollection
     protected static $MainNumKey = 'VLSNUM';
 
     protected static $tablename = 'LIEFERSCHEIN';
-    protected static $hasChild = "LIEFERSCHEIN_POS";
-    protected static $foreignKey = "LIEFERSCHEIN_ID";
+    protected static $hasChild = 'LIEFERSCHEIN_POS';
+    protected static $foreignKey = 'LIEFERSCHEIN_ID';
+
     public function __construct(array $collection = [])
     {
         parent::__construct($collection);

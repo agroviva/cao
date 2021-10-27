@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('CAO_API')) {
-	die();
+    exit();
 }
 
 echo $GLOBALS['egw']->framework->footer;

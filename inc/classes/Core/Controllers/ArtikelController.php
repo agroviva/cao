@@ -10,6 +10,4 @@ class ArtikelController
     {
         $this->ARTIKEL = (object) $object;
     }
-
-    
 }

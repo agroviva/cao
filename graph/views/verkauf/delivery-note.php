@@ -1,89 +1,89 @@
 <?php
-if (!CAO_API) {die();}
+if (!CAO_API) {
+    exit();
+}
 
 use AgroEgw\DB;
-use CAO\Verkauf\Lieferschein;
-use CAO\Einkauf\Einkauf;
-use CAO\Einkauf\EKBestellung;
 use CAO\Core\Mitarbeiter;
 use CAO\UI;
 
 if (!$ConfArr) {
-	$ConfArr = [
-		"class" => "CAO\Verkauf\Lieferschein",
-		"name" => "Lieferschein",
-		"type" => "Verkauf||Lieferschein",
-		"ask" => "Wollen Sie einen Lieferschein erstellen?",
-		"success" => "Der Lieferschein wurde erfolgreich in CAO erstellt!"
-	];
+    $ConfArr = [
+        'class'   => "CAO\Verkauf\Lieferschein",
+        'name'    => 'Lieferschein',
+        'type'    => 'Verkauf||Lieferschein',
+        'ask'     => 'Wollen Sie einen Lieferschein erstellen?',
+        'success' => 'Der Lieferschein wurde erfolgreich in CAO erstellt!',
+    ];
 }
 
-if (!defined("TYPE")) {
-	define('TYPE', $ConfArr["type"]);
+if (!defined('TYPE')) {
+    define('TYPE', $ConfArr['type']);
 }
 
-$GLOBALS["ConfArr"] = $ConfArr;
+$GLOBALS['ConfArr'] = $ConfArr;
 
 class FileRenderingUI
 {
-	public static function init_static(){
-		self::header();
-		self::content();
-		self::footer();
-	}
+    public static function init_static()
+    {
+        self::header();
+        self::content();
+        self::footer();
+    }
 
-	public static function content(){
-		$GlobName = $GLOBALS["ConfArr"]["name"];
-		$OBJECT = new $GLOBALS["ConfArr"]["class"]();
+    public static function content()
+    {
+        $GlobName = $GLOBALS['ConfArr']['name'];
+        $OBJECT = new $GLOBALS['ConfArr']['class']();
 
-		if (!PREMISSION) {
-			UI::Error("Sie habe keinen Zugriff auf dieser Seite");
-		} elseif (!MA_ID) {
-			UI::Error("Verknüpfen Sie die Mitarbeiter zuerst um {$GlobName} erstellen zu können!!");
-		} else {
-			$OBJECT->Files = array();
-			$dir_path = (new DB("
+        if (!PREMISSION) {
+            UI::Error('Sie habe keinen Zugriff auf dieser Seite');
+        } elseif (!MA_ID) {
+            UI::Error("Verknüpfen Sie die Mitarbeiter zuerst um {$GlobName} erstellen zu können!!");
+        } else {
+            $OBJECT->Files = [];
+            $dir_path = (new DB("
 				SELECT * FROM egw_cao_meta 
 				WHERE meta_name LIKE '".strtoupper($GlobName)."_DIRPATH';
 			"))->Fetch();
 
-			if ($dir_path) {
-				$OBJECT->ScanDir();
-				foreach ($OBJECT->Files as $key => $File) {
-					if ((new DB("
+            if ($dir_path) {
+                $OBJECT->ScanDir();
+                foreach ($OBJECT->Files as $key => $File) {
+                    if ((new DB("
 							SELECT * FROM egw_cao_meta 
 							WHERE meta_name = 'file_already_imported' 
 								AND meta_data = '".htmlspecialchars($File)."';
 						"))->Fetch()) {
-						unset($OBJECT->Files[$key]);
-					}
-				}
-			}
-			
-			if (DEBUG_MODE){
-				UI::Warning("Warnung! Sie sind im Test Modus");
-			}
-			$conf = [
-				[
-					"title" => "Einstellungen",
-					"onclick" => "(new Settings('Bill'))",
-					"icon" => "fa-cog"
-				],
-				[
-					"title" => "Artikel Scannen",
-					"onclick" => "(new Settings('ART_SCAN'))",
-					"icon" => "fa-file-text-o"
-				]
-			];
-			UI::StickyNav($conf);
-			?>
+                        unset($OBJECT->Files[$key]);
+                    }
+                }
+            }
+
+            if (DEBUG_MODE) {
+                UI::Warning('Warnung! Sie sind im Test Modus');
+            }
+            $conf = [
+                [
+                    'title'   => 'Einstellungen',
+                    'onclick' => "(new Settings('Bill'))",
+                    'icon'    => 'fa-cog',
+                ],
+                [
+                    'title'   => 'Artikel Scannen',
+                    'onclick' => "(new Settings('ART_SCAN'))",
+                    'icon'    => 'fa-file-text-o',
+                ],
+            ];
+            UI::StickyNav($conf); ?>
 			<div id="<?php echo $GlobName?>">
 				<div class="container">
 					<div class="header">
 						<h1><?php echo $GlobName?> erstellen &#8226; Mitarbeiter: <?php echo Mitarbeiter::Find(MA_ID)->getName()?></h1>
 					</div>
 					<ul id="list" class="list">
-						<?php foreach ($OBJECT->Files as $key => $File): ?>
+						<?php foreach ($OBJECT->Files as $key => $File) { ?>
 						<li id="file_<?php echo base64_encode(encryptIt($File))?>">
 							<div class="main-level">
 								<div class="box">
@@ -96,8 +96,8 @@ class FileRenderingUI
 								</div>
 							</div>
 						</li>
-						<?php endforeach ?>
-						<?php if (empty($OBJECT->Files) || !$dir_path): ?>
+						<?php } ?>
+						<?php if (empty($OBJECT->Files) || !$dir_path) { ?>
 						<li id="file_<?php echo base64_encode(encryptIt($File))?>">
 							<div class="main-level">
 								<div class="box">
@@ -111,7 +111,7 @@ class FileRenderingUI
 								</div>
 							</div>
 						</li>
-						<?php endif ?>
+						<?php } ?>
 					</ul>
 				</div>
 			</div>
@@ -119,11 +119,12 @@ class FileRenderingUI
 				<div id="modal" class="cao_modal"></div>
 			</div>
 			<?php
-		}
-	}
+        }
+    }
 
-	public static function header(){
-		?>
+    public static function header()
+    {
+        ?>
 			<link rel="stylesheet" type="text/css" href="/egroupware/cao/css/cao.css">
 			<link rel="stylesheet" type="text/css" href="/egroupware/cao/css/nprogress.css">
 			<link rel="stylesheet" type="text/css" href="/egroupware/cao/css/table.css">
@@ -132,22 +133,22 @@ class FileRenderingUI
 			<script type="text/javascript" src="/egroupware/cao/js/lib/nprogress.js"></script>
 			<script type="text/javascript" src="/egroupware/cao/js/lib/jquery-ui.js"></script>
 			<script type="text/javascript" src="/egroupware/cao/js/lib/sweetalert.min.js"></script>
-		<?php 
-		require APPDIR.'/graph/views/check.php';
+		<?php
+        require APPDIR.'/graph/views/check.php';
+    }
 
-	}
-
-	public static function footer(){
-		?>
+    public static function footer()
+    {
+        ?>
 		<script type="text/javascript">
-			var NAME = "<?php echo $GLOBALS["ConfArr"]["name"]?>";
-			var TYPE = "<?php echo $GLOBALS["ConfArr"]["type"]?>";
-			var ASK = "<?php echo $GLOBALS["ConfArr"]["ask"]?>";
-			var SUCCESS = "<?php echo $GLOBALS["ConfArr"]["success"]?>";
+			var NAME = "<?php echo $GLOBALS['ConfArr']['name']?>";
+			var TYPE = "<?php echo $GLOBALS['ConfArr']['type']?>";
+			var ASK = "<?php echo $GLOBALS['ConfArr']['ask']?>";
+			var SUCCESS = "<?php echo $GLOBALS['ConfArr']['success']?>";
 		</script>
 		<script type="text/javascript" src="/egroupware/cao/js/FileSaving.js"></script>
 		<?php
-	}
+    }
 }
 
 FileRenderingUI::init_static();
