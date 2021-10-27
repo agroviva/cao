@@ -1,0 +1,76 @@
+ul.input-list {
+	overflow: hidden;
+    height: auto !important;
+    height: 1%;
+    width: 591px;
+    border: 1px solid #adacac;
+    cursor: text;
+    font-size: 12px;
+    font-family: Arial;
+    min-height: 1px;
+    z-index: 999;
+    margin: 10px 0 0 0;
+    padding-left: 0;
+    background-color: #fff;
+    list-style-type: none;
+    /* border-radius: 3px; */
+}
+ul.input-list li.input {
+    float: left;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+ul.input-list li{
+	width: 100%;
+}
+ul.input-list li input {
+    border: 0;
+    width: 100%;
+    padding: 3px 8px;
+    background-color: white;
+    margin: 2px 0;
+    -webkit-appearance: caret;
+}
+.addresses {
+	padding-top: 4px;
+	display: inline-block;
+	width: 591px;
+}
+.addresses .address {
+	border-radius: 5px;
+    background: sandybrown;
+    float: left;
+    margin-right: 5px;
+    margin-bottom: 4px;
+    padding: 4px;
+    cursor: pointer;
+}
+.addresses span.delete {
+	display: none;
+    color: white;
+    margin: 0 0 0 12px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 19px;
+}
+.addresses .active span.delete {
+	display: inline;
+}
+.addresses .active {
+	background: #008c96;
+}
+.addresses p {
+	font-size: 12px;
+	border-radius: 4px;
+	float: left;
+	line-height: 2;
+	font-weight: 500;
+	color: white;
+}
+#Mitarbeiter table td {
+	padding: 0 4px;
+}
+#Mitarbeiter table th {
+	padding: 8px 12px;
+}

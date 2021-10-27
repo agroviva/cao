@@ -1,0 +1,9 @@
+{
+	"require": {
+		"agroviva/egroupware-api": "^1.0",
+		"guzzlehttp/guzzle": "^6.3",
+		"nilportugues/sql-query-builder": "^1.7",
+		"altayalp/ftp-client": "dev-master",
+		"phpseclib/mcrypt_compat": "^1.0"
+	}
+}

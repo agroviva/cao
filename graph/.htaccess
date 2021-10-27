@@ -1,0 +1,8 @@
+RewriteEngine On
+
+Options Indexes FollowSymLinks
+
+RewriteBase /egroupware/cao/graph/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule !\.(js|ico|gif|jpg|png|css)$ index.php
