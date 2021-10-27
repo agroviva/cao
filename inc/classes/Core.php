@@ -119,10 +119,10 @@ class Core
                     $cells = explode($cells_match, $row);
                     $count = 0;
                     foreach ($cells as $cell) {
-                        $Array[] = [
+                        $Array[] = array(
                             'name' 	  => FileImport::escape($cell),
-                            'dataset' => [],
-                        ];
+                            'dataset' => array(),
+                        );
                         $count++;
                     }
                     $row_count++;
