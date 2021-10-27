@@ -31,7 +31,11 @@ $GLOBALS['egw_info']['flags'] = [
 ];
 
 require_once __DIR__.'/../../header.inc.php';
-require_once __DIR__.'/../../agroviva/vendor/autoload.php';
+if (file_exists(__DIR__.'/../../agroviva/vendor/autoload.php')) {
+	require_once __DIR__.'/../../agroviva/vendor/autoload.php';
+} else {
+	require_once __DIR__.'/../vendor/autoload.php';
+}
 require_once __DIR__.'/../inc/classes/autoload.php';
 require_once __DIR__.'/../functions/autoload.php';
 
