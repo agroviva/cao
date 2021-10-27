@@ -120,7 +120,7 @@ class Core
                     $count = 0;
                     foreach ($cells as $cell) {
                         $Array[] = array(
-                            'name' 	  => FileImport::escape($cell),
+                            'name' 	  => "Name",
                             'dataset' => array(),
                         );
                         $count++;
