@@ -8,8 +8,8 @@ class EKBestellCollection extends DefaultCollection
     protected static $MainNumKey = 'BELEGNUM';
 
     protected static $tablename = 'EKBESTELL';
-    protected static $hasChild = "EKBESTELL_POS";
-    protected static $foreignKey = "EKBESTELL_ID";
+    protected static $hasChild = 'EKBESTELL_POS';
+    protected static $foreignKey = 'EKBESTELL_ID';
 
     public function __construct(array $collection = [])
     {

@@ -1,12 +1,11 @@
 <?php
 
-use EGroupware\Api;
 use AgroEgw\DB;
 
 $Data = (new DB("SELECT * FROM egw_cao_meta WHERE meta_name LIKE 'settings'"))->Fetch();
 
 if (!empty($Data)) {
-	$Settings = json_decode($Data["meta_data"], true);
+    $Settings = json_decode($Data['meta_data'], true);
 }
 
 ?>
@@ -15,38 +14,38 @@ if (!empty($Data)) {
 	    <input name="config" type="hidden" value="SaveSettings@upload"> 
         <div class="form-group">
             <label for="inputMySQLServer">MySQL Server</label>
-            <input type="text" name="MySQLServer" class="form-control" id="inputMySQLServer" value="<?php echo $Settings["MySQLServer"]?>" required>
+            <input type="text" name="MySQLServer" class="form-control" id="inputMySQLServer" value="<?php echo $Settings['MySQLServer']?>" required>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="inputMySQLUsername">MySQL Benutzername</label>
-                <input type="text" name="MySQLUsername" class="form-control" id="inputMySQLUsername" value="<?php echo $Settings["MySQLUsername"]?>" required>
+                <input type="text" name="MySQLUsername" class="form-control" id="inputMySQLUsername" value="<?php echo $Settings['MySQLUsername']?>" required>
             </div>
             <div class="form-group col-md-6">
                 <label for="inputMySQLPassword">MySQL Passwort</label>
-                <input type="text" name="MySQLPassword" class="form-control" id="inputMySQLPassword" value="<?php echo $Settings["MySQLPassword"]?>" required>
+                <input type="text" name="MySQLPassword" class="form-control" id="inputMySQLPassword" value="<?php echo $Settings['MySQLPassword']?>" required>
             </div>
             <div class="form-group col-md-12">
                 <label for="inputMySQLDatabase">MySQL Datenbank</label>
-                <input type="text" name="MySQLDatabase" class="form-control" id="inputMySQLDatabase" value="<?php echo $Settings["MySQLDatabase"]?>" required>
+                <input type="text" name="MySQLDatabase" class="form-control" id="inputMySQLDatabase" value="<?php echo $Settings['MySQLDatabase']?>" required>
             </div>
         </div>
         <div class="form-group">
             <label for="inputSFTP">SFTP Server</label>
-            <input type="text" name="SFTPServer" class="form-control" id="inputSFTP" value="<?php echo $Settings["SFTPServer"]?>" required>
+            <input type="text" name="SFTPServer" class="form-control" id="inputSFTP" value="<?php echo $Settings['SFTPServer']?>" required>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="inputSFTPUsername">Benutzername</label>
-                <input type="text" name="SFTPUsername" class="form-control" id="inputSFTPUsername" value="<?php echo $Settings["SFTPUsername"]?>" required>
+                <input type="text" name="SFTPUsername" class="form-control" id="inputSFTPUsername" value="<?php echo $Settings['SFTPUsername']?>" required>
             </div>
             <div class="form-group col-md-6">
                 <label for="inputSFTPPassword">Passwort</label>
-                <input type="text" name="SFTPPassword" class="form-control" id="inputSFTPPassword" value="<?php echo $Settings["SFTPPassword"]?>" required>
+                <input type="text" name="SFTPPassword" class="form-control" id="inputSFTPPassword" value="<?php echo $Settings['SFTPPassword']?>" required>
             </div>
             <div class="form-group col-md-12">
                 <label for="inputSFTPPath">Pfad</label>
-                <input type="text" name="SFTPPath" class="form-control" id="inputSFTPPath" value="<?php echo $Settings["SFTPPath"]?>" required>
+                <input type="text" name="SFTPPath" class="form-control" id="inputSFTPPath" value="<?php echo $Settings['SFTPPath']?>" required>
             </div>
         </div>
     </form>

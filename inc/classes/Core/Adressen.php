@@ -33,7 +33,7 @@ class Adressen
     public static function Find($KUNNUM)
     {
         if (is_array($KUNNUM)) {
-            $array = array();
+            $array = [];
 
             foreach ($KUNNUM as $NUM) {
                 $indexKey = array_search($NUM, array_column(self::$DATASET, 'KUNNUM1'));

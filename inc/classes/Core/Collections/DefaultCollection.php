@@ -2,18 +2,17 @@
 
 namespace CAO\Core\Collections;
 
+use CAO\Core;
 use CAO\Core\MainNumbers;
 use CAO\Request;
-use CAO\Core;
 use EGroupware\Api\Cache;
 use NilPortugues\Sql\QueryBuilder\Builder\GenericBuilder;
-
 
 abstract class DefaultCollection extends Collection
 {
     protected $MainNum = null;
 
-    protected static $primaryKey = "REC_ID";
+    protected static $primaryKey = 'REC_ID';
 
     protected static $searchKeys = [];
 
@@ -25,7 +24,8 @@ abstract class DefaultCollection extends Collection
         }
     }
 
-    public static function Find($num, string $key = "", $comparisonType = "="){
+    public static function Find($num, string $key = '', $comparisonType = '=')
+    {
         $key = empty($key) ? self::$primaryKey : $key;
         $storageKey = static::$tablename.$key.$num;
 
@@ -33,37 +33,38 @@ abstract class DefaultCollection extends Collection
             return $result;
         }
 
-        $sql = "SELECT * FROM ".static::$tablename." ";
+        $sql = 'SELECT * FROM '.static::$tablename.' ';
 
         if (empty(static::$searchKeys)) {
             $sql .= "WHERE $key $comparisonType '{$num}'";
         } else {
-            $sql .= "WHERE 1=1 ";
+            $sql .= 'WHERE 1=1 ';
             $i = 0;
             foreach (static::$searchKeys as $searchKey) {
                 $i++;
                 if ($i == 1) {
-                    $sql .= "AND (";
+                    $sql .= 'AND (';
                 }
                 $sql .= "$searchKey $comparisonType '{$num}'";
                 if ($i != count(static::$searchKeys)) {
-                    $sql .= " OR ";
+                    $sql .= ' OR ';
                 }
             }
             if ($i > 0) {
-                $sql .= ")";
+                $sql .= ')';
             }
         }
 
         $result = Request::Run($sql);
-        $result = is_array($result[0]) ? $result[0] : array();
+        $result = is_array($result[0]) ? $result[0] : [];
 
         return Core::Temp($storageKey, new static($result));
     }
 
-    public static function All(){
+    public static function All()
+    {
         $tablename = static::$tablename;
-        $storageKey = $tablename."|ALL";
+        $storageKey = $tablename.'|ALL';
 
         $result = unserialize(Cache::getCache(Cache::INSTANCE, __CLASS__, $storageKey));
         if (empty($result)) {
@@ -73,14 +74,15 @@ abstract class DefaultCollection extends Collection
             ";
             $result = Request::Run($query);
 
-            $result = is_array($result) ? $result : array();
+            $result = is_array($result) ? $result : [];
             Cache::setCache(Cache::INSTANCE, __CLASS__, $storageKey, serialize($result), 3600);
         }
 
         return new static($result);
     }
 
-    public static function last($where = "", $order = "DESC"){
+    public static function last($where = '', $order = 'DESC')
+    {
         $tablename = static::$tablename;
         $sql = "SELECT * FROM $tablename WHERE 1=1 ";
         $sql .= "$where ";
@@ -90,15 +92,15 @@ abstract class DefaultCollection extends Collection
         if ($result = Core::Temp($storageKey)) {
             return $result;
         } else {
-             $result = Request::Run($sql);
-             $result = is_array($result[0]) ? $result[0] : array();
+            $result = Request::Run($sql);
+            $result = is_array($result[0]) ? $result[0] : [];
         }
 
         return Core::Temp($storageKey, new static($result));
     }
 
-    public static function first(){
-
+    public static function first()
+    {
     }
 
     public function addMitarbeiterID()
@@ -163,7 +165,7 @@ abstract class DefaultCollection extends Collection
     {
         $this->clear();
 
-        // $builder = new GenericBuilder(); 
+        // $builder = new GenericBuilder();
 
         // $query = $builder->insert()
         //     ->setTable(static::$tablename)
@@ -206,39 +208,44 @@ abstract class DefaultCollection extends Collection
             if ($foundKey === false) {
                 $this->unset($key);
             } else {
-                if (is_null($value) && isset($columns[$foundKey]["Default"])) {
+                if (is_null($value) && isset($columns[$foundKey]['Default'])) {
                     $this->unset($key);
                 }
             }
         }
     }
 
-    public function hasChild($name){
+    public function hasChild($name)
+    {
         if (isset(static::$hasChild)) {
             if (is_array(static::$hasChild)) {
-               return in_array($name, static::$hasChild);
-            } elseif (static::$hasChild === $name){
+                return in_array($name, static::$hasChild);
+            } elseif (static::$hasChild === $name) {
                 return true;
             }
         }
+
         return false;
     }
 
-    public function  __get($name) {
+    public function __get($name)
+    {
 
         // check if the named key exists in our array
-        if(array_key_exists($name, $this->collection)) {
+        if (array_key_exists($name, $this->collection)) {
             // then return the value from the array
             return $this->collection[$name];
         } else {
             if ($this->hasChild($name)) {
                 $result = Request::Run("
                     SELECT * FROM {$name} 
-                    WHERE ".static::$foreignKey." = ".$this->collection[self::$primaryKey]." 
-                ");
+                    WHERE ".static::$foreignKey.' = '.$this->collection[self::$primaryKey].' 
+                ');
+
                 return new Collection($result);
             }
         }
+
         return new Collection();
     }
 }

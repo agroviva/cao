@@ -1,6 +1,6 @@
 <?php
 
-if (!function_exists("Dump")) {
+if (!function_exists('Dump')) {
     function Dump($dmp, $prnt = false)
     {
         echo '<pre>';
@@ -13,7 +13,7 @@ if (!function_exists("Dump")) {
     }
 }
 
-if (!function_exists("encryptIt")) {
+if (!function_exists('encryptIt')) {
     function encryptIt($q)
     {
         $cryptKey = 'upfafhwpqafhsaofihqwohfasastfAKD';
@@ -23,7 +23,7 @@ if (!function_exists("encryptIt")) {
     }
 }
 
-if (!function_exists("decryptIt")) {
+if (!function_exists('decryptIt')) {
     function decryptIt($q)
     {
         $cryptKey = 'upfafhwpqafhsaofihqwohfasastfAKD';

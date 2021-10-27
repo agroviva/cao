@@ -8,8 +8,8 @@ class JournalCollection extends DefaultCollection
     protected static $MainNumKey = 'VRENUM';
 
     protected static $tablename = 'JOURNAL';
-    protected static $hasChild = "JOURNALPOS";
-    protected static $foreignKey = "JOURNAL_ID";
+    protected static $hasChild = 'JOURNALPOS';
+    protected static $foreignKey = 'JOURNAL_ID';
 
     public function __construct(array $collection = [])
     {

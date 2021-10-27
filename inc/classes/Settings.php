@@ -4,5 +4,4 @@ namespace CAO;
 
 class Settings
 {
-
 }

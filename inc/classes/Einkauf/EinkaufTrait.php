@@ -3,9 +3,6 @@
 namespace CAO\Einkauf;
 
 use AgroEgw\DB;
-use CAO\Core;
-use CAO\Core\Csv;
-use CAO\Core\Artikel;
 use CAO\Core\Filesystem;
 use EGroupware\Api\Vfs;
 
@@ -18,13 +15,13 @@ abstract class EinkaufTrait
     public function __construct()
     {
         Filesystem::start();
-        $Config = $GLOBALS["ConfArr"];
+        $Config = $GLOBALS['ConfArr'];
         if (!empty($Config)) {
             self::$Config = $Config;
-            self::$ScanKey = strtoupper($Config['name']).'_DIRPATH';   
+            self::$ScanKey = strtoupper($Config['name']).'_DIRPATH';
         }
     }
-    
+
     public function ScanDir($path = '/', $recursive = false)
     {
         if (!$recursive && $dir_path = (new DB("

@@ -1,11 +1,11 @@
 <?php
-use EGroupware\Api;
 use AgroEgw\DB;
+use EGroupware\Api;
 use GuzzleHttp\Client as Client;
 
 $client = new Client();
 $categories = (new DB("SELECT * FROM egw_categories WHERE cat_appname = 'timesheet'"))->FetchAll();
-$config = Api\Config::read("timesheet");
+$config = Api\Config::read('timesheet');
 
 ?>
 <link rel="stylesheet" type="text/css" href="/egroupware/cao/css/settings.css">
@@ -34,15 +34,15 @@ $config = Api\Config::read("timesheet");
         <h2>Wählen Sie die Kategorien aus!</h2>
         <ul style="list-style: none;-webkit-padding-start: 0px;">
         <?php
-			foreach ($categories as $key => $category) {
-				?>
+            foreach ($categories as $key => $category) {
+                ?>
 					<li>
 					<input class="categories" type="checkbox" id="<?php echo $category['cat_name']?>" name="categories[]" value="<?php echo $category['cat_id']?>">
 		 			<label for="<?php echo $category['cat_name']?>"><?php echo $category['cat_name']?></label>
 		 			</li>
 				<?php
-			}
-		?>
+            }
+        ?>
 		</ul>
         <button class="first next">Nächster Schritt</button>
       </form>
@@ -59,23 +59,23 @@ $config = Api\Config::read("timesheet");
 			<select id="status_import" name="status_import" style="margin-top: -30px;">
 				<option value="none">Status...</option>
 				<?php
-				foreach ($config['status_labels'] as $key => $status) {
-					?>
+                foreach ($config['status_labels'] as $key => $status) {
+                    ?>
 					<option value="<?php echo $key?>"><?php echo $status['name']?></option>
 					<?php
-				}
-				?>
+                }
+                ?>
 			</select>
 			<p style="margin-top: -30px;">Bei einer erfolgreich erstellten Rechnung wird der Status der Stundenzettel geändert auf:</p>
 			<select id="status_finish" name="status_finish" style="margin-top: -30px;">
 				<option value="none">Status...</option>
 				<?php
-				foreach ($config['status_labels'] as $key => $status) {
-					?>
+                foreach ($config['status_labels'] as $key => $status) {
+                    ?>
 					<option value="<?php echo $key?>"><?php echo $status['name']?></option>
 					<?php
-				}
-				?>
+                }
+                ?>
 			</select>
 			<br />
 	        <button class="finish">Speichern</button>

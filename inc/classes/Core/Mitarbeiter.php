@@ -10,7 +10,8 @@ class Mitarbeiter
 {
     private static $DATASET;
 
-    public static function all(){
+    public static function all()
+    {
         return self::$DATASET;
     }
 
