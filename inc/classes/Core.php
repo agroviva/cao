@@ -119,7 +119,7 @@ class Core
 					foreach ($cells as $cell) {
 						$Array[] = [
 							'name' 	  => FileImport::escape($cell),
-							'dataset' => [],
+							'dataset' => []
 						];
 						$count++;
 					}
