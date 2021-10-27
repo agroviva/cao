@@ -1,4 +1,4 @@
-# CAO-Schnittstelle
+# CAO-Faktura 1.5 Schnittstelle für EGroupware
 
 # Clone Github Repository
 ```$``` ```git clone https://github.com/agroviva/cao```
