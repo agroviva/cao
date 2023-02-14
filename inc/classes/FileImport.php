@@ -1,73 +1,68 @@
 <?php
+
 namespace CAO;
 
-use CAO\Core;
 use EGroupware\Api;
-use EGroupware\Api\Vfs;
 use EGroupware\Api\Header\ContentSecurityPolicy as CSP;
-/**
-* 
-*/
+use EGroupware\Api\Vfs;
+
 class FileImport
 {
-	function __construct(){
-		$this->header();
-		$this->content();
-		$this->footer();
-	}
+    public function __construct()
+    {
+        $this->header();
+        $this->content();
+        $this->footer();
+    }
 
-	public function header(){
-		CSP::add_script_src(array('self', 'unsafe-eval', 'unsafe-inline'));
-		CSP::add("font-src", array('fonts.gstatic.com'));
-		CSP::add("font-src", array('maxcdn.icons8.com'));
-		CSP::add("style-src", array('https://fonts.googleapis.com/'));
-		CSP::add("style-src", array('https://maxcdn.icons8.com/'));
-		CSP::add("script-src", array('https://cdn.datatables.net'));
+    public function header()
+    {
+        CSP::add_script_src(['self', 'unsafe-eval', 'unsafe-inline']);
+        CSP::add('font-src', ['fonts.gstatic.com']);
+        CSP::add('font-src', ['maxcdn.icons8.com']);
+        CSP::add('style-src', ['https://fonts.googleapis.com/']);
+        CSP::add('style-src', ['https://maxcdn.icons8.com/']);
+        CSP::add('script-src', ['https://cdn.datatables.net']);
 
-		echo $GLOBALS['egw']->framework->header();
-		?>
+        echo $GLOBALS['egw']->framework->header(); ?>
 		<link rel="stylesheet" type="text/css" href="/egroupware/cao/css/bootstrap.css">
 		<script type="text/javascript" src="/egroupware/cao/js/lib/jquery.js"></script>
 		<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
 
 		<?php
-	}
+    }
 
-	public static function escape($string) {
-		$string = str_replace("\r", "", $string);
-		$string = str_replace("\n", "", $string);
-		
-		return trim(htmlspecialchars($string, ENT_COMPAT | ENT_HTML401, 'ISO-8859-1'), " ");
-	}
+    public static function escape($string)
+    {
+        $string = str_replace("\r", '', $string);
+        $string = str_replace("\n", '', $string);
 
-	public function content(){
-		header('Content-Type: text/html; charset=utf-8');
-		$path = "/";
-		if (isset($_REQUEST['path'])){ 
-			$path = !empty($_REQUEST['path']) ? $_REQUEST['path'] : $path;
-			Api\Cache::setSession('cao', 'is_path', $path);
-		}
+        return trim(htmlspecialchars($string, ENT_COMPAT | ENT_HTML401, 'ISO-8859-1'), ' ');
+    }
 
-		if (Api\Cache::getSession('cao', 'is_path'))
-		{
-			$path = Api\Cache::getSession('cao', 'is_path');
-		} else {
-			Api\Cache::setSession('cao', 'is_path', $path);
-		}
-		
-		if (isset($path) && !empty($path))
-		{
-			if ($path[0] != '/')
-			{
-				throw new Api\Exception\WrongUserinput('Not an absolute path!');
-			}
+    public function content()
+    {
+        header('Content-Type: text/html; charset=utf-8');
+        $path = '/';
+        if (isset($_REQUEST['path'])) {
+            $path = !empty($_REQUEST['path']) ? $_REQUEST['path'] : $path;
+            Api\Cache::setSession('cao', 'is_path', $path);
+        }
 
+        if (Api\Cache::getSession('cao', 'is_path')) {
+            $path = Api\Cache::getSession('cao', 'is_path');
+        } else {
+            Api\Cache::setSession('cao', 'is_path', $path);
+        }
 
-			$is_dir = Vfs::is_dir($path);
-			$is_file = Vfs::file_exists($path);
+        if (isset($path) && !empty($path)) {
+            if ($path[0] != '/') {
+                throw new Api\Exception\WrongUserinput('Not an absolute path!');
+            }
 
-			?>
+            $is_dir = Vfs::is_dir($path);
+            $is_file = Vfs::file_exists($path); ?>
 			<script type="text/javascript">
 				// Every two seconds....
 				var path = "<?php echo htmlspecialchars($path); ?>";
@@ -84,33 +79,28 @@ class FileImport
 						<input type="hidden" name="menuaction" value="cao.cao_ui.init">
 						<input type="hidden" name="type" value="file_import">
 						<button type="submit" class="btn submit btn-primary">Absenden</button>
-						<?php if ($is_dir): ?>
+						<?php if ($is_dir) { ?>
 							<button type="apply" class="btn apply btn-primary" onclick="ApplyPath(event);">Übernehmen</button>
-						<?php endif ?>
+						<?php } ?>
 					</div>
 				</form>
 			<?php
-			if ($is_dir)// && ($d = Vfs::opendir($path)))
-			{
-				$files = array();
-				//while(($file = readdir($d)))
-				foreach(Vfs::scandir($path) as $file)
-				{
-					if (Vfs::is_readable($fpath=Vfs::concat($path,$file)))
-					{
-						// echo $fpath."</br>";
-						$file = array(
-							"url" => Api\Html::a_href($file,'cao.cao_ui.init&type=file_import',array('path'=>$fpath)),
-							"name" => $file
-						);
-						// $file['url'] .= ' ('.Vfs::mime_content_type($fpath).')';
-						$files[] = $file;
-					}
-				}
-				//closedir($d);
-				$time2f = number_format(1000*(microtime(true)-$time2),1);
-
-				?>
+            if ($is_dir) {// && ($d = Vfs::opendir($path)))
+                $files = [];
+                //while(($file = readdir($d)))
+                foreach (Vfs::scandir($path) as $file) {
+                    if (Vfs::is_readable($fpath = Vfs::concat($path, $file))) {
+                        // echo $fpath."</br>";
+                        $file = [
+                            'url'  => Api\Html::a_href($file, 'cao.cao_ui.init&type=file_import', ['path'=>$fpath]),
+                            'name' => $file,
+                        ];
+                        // $file['url'] .= ' ('.Vfs::mime_content_type($fpath).')';
+                        $files[] = $file;
+                    }
+                }
+                //closedir($d);
+                $time2f = number_format(1000 * (microtime(true) - $time2), 1); ?>
 				<style type="text/css">
 					.table-foldersystem tbody tr td:first-child{
 					  width:1%;
@@ -121,37 +111,37 @@ class FileImport
 					<thead>
 					  <tr>
 						<th>
-							<?php if ($path != "/"): ?>
+							<?php if ($path != '/') { ?>
 								<?php
-								$path = explode("/", $path);
-								unset($path[(count($path) - 1)]);
-								$path = implode("/", $path);
-								$path = $path ? $path : "/";
-								$goto = urlencode($path);
-								?>
+                                $path = explode('/', $path);
+                                unset($path[(count($path) - 1)]);
+                                $path = implode('/', $path);
+                                $path = $path ? $path : '/';
+                                $goto = urlencode($path);
+                                ?>
 								<a href="/egroupware/index.php?path=<?php echo $goto?>&menuaction=cao.cao_ui.init&type=file_import"><-</a>
-							<?php endif ?>
+							<?php } ?>
 						</th>
 						<th>Name</th>
 						<!-- <th>Action</th> -->
 					  </tr>
 					</thead>
 					<tbody>
-					  <?php foreach ($files as $key => $file): ?>
-						<?php if (strpos($file['name'], ".") === false): ?>
+					  <?php foreach ($files as $key => $file) { ?>
+						<?php if (strpos($file['name'], '.') === false) { ?>
 							<tr>
 								<td><i class="glyphicon glyphicon-folder-open"></i></td>
 								<td><?php echo $file['url']?></td>
 								<!-- <td></td> -->
 							</tr>
-						<?php else: ?>
+						<?php } else { ?>
 							<tr>
 								<td><i class="glyphicon glyphicon-file"></i></td>
 								<td><?php echo $file['url']?></td>
 								<!-- <td><button>Import</button></td> -->
 							 </tr>
-						<?php endif ?>
-					  <?php endforeach ?>
+						<?php } ?>
+					  <?php } ?>
 					   <!-- <tr>
 						<td><i class="glyphicon glyphicon-picture"></i></td>
 						<td>logo.jpg</td>
@@ -174,9 +164,8 @@ class FileImport
 					</table>
 				</div>
 				<?php
-			} elseif ($is_file) {
-				
-				?>
+            } elseif ($is_file) {
+                ?>
 				<style type="text/css">
 					.dataTables_length select {
 						line-height: 1.5;
@@ -184,24 +173,23 @@ class FileImport
 				</style>
 				<?php
 
-				$output = Core::readFile($path);
-				Core::CsvToTable($output);
-				?>
+                $output = Core::readFile($path);
+                Core::CsvToTable($output); ?>
 				<script type="text/javascript">
 					jQuery(document).ready(function() {
 						$('#csv_output').DataTable();
 					} );
 				</script>
-				<?php	
-			}
-			?>
+				<?php
+            } ?>
 			</div>
 			<?php
-		}
-	}
+        }
+    }
 
-	public function footer(){
-		?>
+    public function footer()
+    {
+        ?>
 		<script type="text/javascript">
 			// var fileToRead = "<?php echo $fileToRead?>";
 			// console.log(fileToRead);
@@ -217,6 +205,6 @@ class FileImport
 			// });
 		</script>
 		<?php
-		echo $GLOBALS['egw']->framework->footer();
-	}
+        echo $GLOBALS['egw']->framework->footer();
+    }
 }

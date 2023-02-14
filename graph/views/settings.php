@@ -1,7 +1,7 @@
 <?php
 use AgroEgw\DB;
 use EGroupware\Api;
-use GuzzleHttp\Client as Client;
+use GuzzleHttp\Client;
 
 $client = new Client();
 $categories = (new DB("SELECT * FROM egw_categories WHERE cat_appname = 'timesheet'"))->FetchAll();
