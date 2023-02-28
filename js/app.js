@@ -1,154 +1,86 @@
-var $ = jQuery;
-var $firstButton = $(".first"),
-	$secondButton = $(".second"),
-	$categories = Array(),
-	$ARTNUM = Array(),
-	$SendSettings = {},
-	$ctr = $(".container");
+/**
+ * CAO-Schnittstelle
+ *
+ * @link https://github.com/agroviva/cao
+ * @package cao
+ * @author Enver Morinaj
+ */
 
-$firstButton.on("click", function(e){
-	var checked1 = false;
-	$("input.categories").each(function(){
-		//console.log(this.checked);
-		if (this.checked) {
-			$categories.push({
-				"id":   $(this).val(),
-				"name": this.id
-			}); 
-			checked1=true; 
-		}
-	})
-	if (checked1) {
-		$(this).text("Speichern...");
-		$.each($categories, function(){
-			console.log(this);
-			$(".artikel_cat").append('<div><span>'+this.name+':</span></div><input type="number" id="'+this.id+'" value="" placeholder="Artikelnummer"><input type="text" data-catid="'+this.id+'" value="" placeholder="Maßeinheit"><br />');
-		});
-		setTimeout(function() {
-			$ctr.addClass("center slider-two-active").removeClass("full slider-one-active");
-		}, 900);
-	} else {
-		var text = $(this).text(), elem = this;
-		$(this).text("Whähle eine Kategorie aus...")
-		setTimeout(function() {
-			$(elem).text(text);
-		}, 2000);
-	}
-	e.preventDefault();
-});
-
-$secondButton.on("click", function(e){
-	var checked2 = true, art_num;
-	$ARTNUM = Array();
-	$('.artikel_cat input').each(function(){
-		var value = $(this).val();
-		if (value == 0 || !value) {
-			checked2 = false;
-		} else {
-			if (this.id) {
-				var me_einheit = $("input[data-catid="+this.id+"]").val();
-				$ARTNUM.push({"art": value, "cat": this.id, "me_einheit": me_einheit});
-			}
-		}
-	});
-	if (checked2 == false) {
-		var text = $(this).text(), elem = this;
-		$(this).text("Fülle alle Felder aus...")
-		setTimeout(function() {
-			$(elem).text(text);
-		}, 2000);
-	} else {
-		var check_artikel = Array(), elem = this;
-		$.each($ARTNUM, function(){
-			check_artikel.push("check_artikel[]="+this['art']);
-		});
-		$.ajax({
-			url: "/egroupware/index.php?menuaction=cao.cao_ui.init&cd=no",
-			method: "POST",
-			data: "type=ajax&"+check_artikel.join("&"),
-			success: function(res){
-					var data = res, finish = true, cat;
-					if (data && typeof data == "object") {
-						$.each(data, function(key, value){
-							$.each($ARTNUM, function(){
-								if (this.art == key) {
-									cat = this.cat;
-								}
-							});
-							if (value == "Y") {
-								$(".artikel_cat input#"+cat).css("border-color", "green");
-							} else {
-								finish = false;
-								$(".artikel_cat input#"+cat).css("border-color", "red");
-							}
-
-						});
-						if (finish) {
-							$(elem).text("Speichern...").delay(900).queue(function(){
-								$ctr.addClass("full slider-three-active").removeClass("center slider-two-active slider-one-active");
-							});
-						}
-					}
-			},
-			error: function(){
-				console.log('Something went wrong!');
-			},
-		});
-	}
-	e.preventDefault();
-});
-
-$(".finish").click(function(){
-	$SendSettings['connection'] = $ARTNUM;
-	var status_import = $( "#status_import option:selected" ).val();
-	var status_finish = $( "#status_finish option:selected" ).val();
-
-	if (!isNaN(parseInt(status_import)) && !isNaN(parseInt(status_finish))) {
-		$(this).text("Speichern...");
-		$SendSettings['status_settings'] = {
-			"status_import": status_import,
-			"status_finish": status_finish
-		};
-		$.ajax({
-			url: "/egroupware/index.php?menuaction=cao.cao_ui.init&cd=no",
-			method: "POST",
-			data: "type=ajax&save=settings&data="+JSON.stringify($SendSettings),
-			success: function(res){
-					var data = res, finish = true;
-					if (data && typeof data == "object") {
-						console.log(data);
-						if (data.connection && data.status_settings) {
-							window.location.reload();
-						}
-					}
-			},
-			error: function(){
-				console.log('Something went wrong!');
-			}
-		});
-	} else {
-		$(this).text("Whähle einen Status....");
-	}
-});
-
-
-var CAO = class CAO {
-	constructor($action){
-		this.ArtScan();
-	}
-
-	ArtScan(){
-		$.ajax({
-			url: "/egroupware/index.php?menuaction=cao.cao_ui.init&cd=no",
-			method: "POST",
-			data: "type=Einkauf||Einkauf&action=ART_SCAN",
-			success: function(data){
-				CAO.ArtScan = data;
-			},
-			error: function(){
-				console.log('Something went wrong!');
-			},
-		});
-	}
-}
-new CAO("ART_SCAN");
+// conditional import AppJS for 23.1+, but not for non-module include of 21.1 and before, as an import gives a JS syntax error if not in module context
+//import {AppJS} from "../../api/js/jsapi/app_base.js";
+(typeof window.$LAB === 'undefined' ? import("../../api/js/jsapi/app_base.js") : Promise.resolve({AppJS: window.AppJS})).then((modules) => {
+    /**
+     * Javascript for cao
+     *
+     * @augments AppJS
+     */
+    app.classes.cao = modules.AppJS.extend(
+    {
+        /**
+         * application name
+         */
+        appname: 'cao',
+    
+        /**
+         * Constructor
+         *
+         * @memberOf app.calendar
+         */
+        init: function()
+        {
+            // call parent
+            this._super.apply(this, arguments);
+    
+            jQuery(document).ready(function()
+            {
+                // add target _blank to all external links, as our content security policy will prevent them otherwise
+                jQuery('a').click(function()
+                {
+                    if (this.href.substr(0, 1+window.location.origin.length) !== window.location.origin+'/')
+                    {
+                        this.target = '_blank';
+                    }
+                });
+            });
+        },
+    
+        /**
+         * Destructor
+         */
+        destroy: function()
+        {
+            // call parent
+            this._super.apply(this, arguments);
+        },
+    
+        /**
+         * This function is called when the etemplate2 object is loaded
+         * and ready.  If you must store a reference to the et2 object,
+         * make sure to clean it up in destroy().
+         *
+         * @param {etemplate2} _et2 newly ready et2 object
+         * @param {string} _name name of template
+         */
+        et2_ready: function(_et2, _name)
+        {
+            // call parent
+            this._super.apply(this, arguments);
+        },
+    
+        /**
+         * Onchange for readable and writable acl: default back to "Everyone" if non set
+         *
+         * @param {DOMNode} _node
+         * @param {et2_select} _widget
+         */
+        onchange_acl: function(_node, _widget)
+        {
+            var value = _widget.get_value();
+            if (jQuery.isArray(value) && !value.length)
+            {
+                _widget.set_value('_0');
+            }
+        }
+    });
+    
+    }); // conditional import AppJS

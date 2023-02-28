@@ -84,4 +84,4 @@ $config = Api\Config::read('timesheet');
     </div>
   </div>
 </div>
-<script type="text/javascript" src="/egroupware/cao/js/app.js"></script>
+<script type="text/javascript" src="/egroupware/cao/js/myapp.js"></script>
