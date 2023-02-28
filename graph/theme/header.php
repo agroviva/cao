@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('CAO_API')) {
-    exit();
+	exit();
 }
 
 echo $GLOBALS['egw']->framework->header;

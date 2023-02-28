@@ -18,21 +18,21 @@ use altayalp\FtpClient\Servers\SftpServer;
 
 class cao_sync
 {
-    public function __construct()
-    {
-    }
+	public function __construct()
+	{
+	}
 
-    public function synchron()
-    {
-        $Data = (new DB("SELECT * FROM egw_cao_meta WHERE meta_name LIKE 'settings'"))->Fetch();
+	public function synchron()
+	{
+		$Data = (new DB("SELECT * FROM egw_cao_meta WHERE meta_name LIKE 'settings'"))->Fetch();
 
-        if (!empty($Data)) {
-            $metaData = json_decode($Data['meta_data'], true);
-            $server = new SftpServer($metaData['SFTPServer']);
-            $server->login($metaData['SFTPUsername'], $metaData['SFTPPassword']);
+		if (!empty($Data)) {
+			$metaData = json_decode($Data['meta_data'], true);
+			$server = new SftpServer($metaData['SFTPServer']);
+			$server->login($metaData['SFTPUsername'], $metaData['SFTPPassword']);
 
-            $file = FileFactory::build($server);
-            $list = $file->ls($metaData['SFTPPath']);
-        }
-    }
+			$file = FileFactory::build($server);
+			$list = $file->ls($metaData['SFTPPath']);
+		}
+	}
 }

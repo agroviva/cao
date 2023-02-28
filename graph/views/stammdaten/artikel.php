@@ -2,7 +2,7 @@
 use CAO\Core\Collections\ArtikelCollection;
 
 if (!CAO_API) {
-    exit();
+	exit();
 }
 
 ?>
@@ -17,10 +17,10 @@ if (!CAO_API) {
 <script type="text/javascript" src="/egroupware/cao/js/lib/sweetalert.min.js"></script>
 
 <?php
-    require APPDIR.'/graph/views/check.php';
+	require APPDIR.'/graph/views/check.php';
 
-    $collection = new ArtikelCollection();
-    $artikel = ArtikelCollection::Find(346);
+	$collection = new ArtikelCollection();
+	$artikel = ArtikelCollection::Find(346);
 
-    Dump($collection->diff($artikel));
-    // echo $collection->All()->dump();
+	Dump($collection->diff($artikel));
+	// echo $collection->All()->dump();
