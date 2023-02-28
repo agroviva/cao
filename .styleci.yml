@@ -1,5 +1,3 @@
-risky: true
-
 version: 8.1
 
 preset: recommended
@@ -7,12 +5,3 @@ preset: recommended
 tab-width: 4
 
 use-tabs: true
-
-enabled:
-  - long_array_syntax
-  - strict
-  - unalign_double_arrow
-
-disabled:
-  - align_double_arrow
-  - short_array_syntax
