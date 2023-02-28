@@ -4,10 +4,10 @@ namespace CAO\Core\Controllers;
 
 class ArtikelController
 {
-    protected $ARTIKEL;
+	protected $ARTIKEL;
 
-    public function __construct($object)
-    {
-        $this->ARTIKEL = (object) $object;
-    }
+	public function __construct($object)
+	{
+		$this->ARTIKEL = (object) $object;
+	}
 }

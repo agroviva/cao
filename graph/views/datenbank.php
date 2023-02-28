@@ -5,7 +5,7 @@ use AgroEgw\DB;
 $Data = (new DB("SELECT * FROM egw_cao_meta WHERE meta_name LIKE 'settings'"))->Fetch();
 
 if (!empty($Data)) {
-    $Settings = json_decode($Data['meta_data'], true);
+	$Settings = json_decode($Data['meta_data'], true);
 }
 
 ?>

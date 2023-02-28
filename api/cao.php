@@ -15,26 +15,26 @@ define('CAO_CREDENTIALS', base64_encode('agroviva:keineAhnung666'));
 define('INSTANCE', explode('.', $_SERVER['SERVER_NAME'])[0]);
 
 switch (INSTANCE) {
-    case 'e00':
-        define('DEBUG_MODE', false);
-        break;
+	case 'e00':
+		define('DEBUG_MODE', false);
+		break;
 
-    default:
-        define('DEBUG_MODE', false);
-        break;
+	default:
+		define('DEBUG_MODE', false);
+		break;
 }
 $_GET['cd'] = 'no';
 $GLOBALS['egw_info']['flags'] = [
-    'currentapp'    => 'cao',
-    'noheader'      => true,
-    'nonavbar'      => true,
+	'currentapp'    => 'cao',
+	'noheader'      => true,
+	'nonavbar'      => true,
 ];
 
 require_once __DIR__.'/../../header.inc.php';
 if (file_exists(__DIR__.'/../../agroviva/vendor/autoload.php')) {
-    require_once __DIR__.'/../../agroviva/vendor/autoload.php';
+	require_once __DIR__.'/../../agroviva/vendor/autoload.php';
 } else {
-    require_once __DIR__.'/../vendor/autoload.php';
+	require_once __DIR__.'/../vendor/autoload.php';
 }
 require_once __DIR__.'/../inc/classes/autoload.php';
 require_once __DIR__.'/../functions/autoload.php';
@@ -42,14 +42,14 @@ require_once __DIR__.'/../functions/autoload.php';
 $async = new asyncservice();
 
 if (($async->read('cao')['cao']['method'] != 'cao.cao_sync.synchron')) {
-    $async->delete('cao');
-    $async->set_timer(['hour' => '59*/2'], 'cao', 'cao.cao_sync.synchron', null);
+	$async->delete('cao');
+	$async->set_timer(['hour' => '59*/2'], 'cao', 'cao.cao_sync.synchron', null);
 }
 
 $db = (new DB("SHOW TABLES LIKE 'egw_cao'"))->Fetch();
 if (empty($db)) {
-    $async->delete('cao');
-    exit();
+	$async->delete('cao');
+	exit();
 }
 
 ob_get_clean();

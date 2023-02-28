@@ -1,5 +1,5 @@
 <?php if (!CAO_API) {
-    exit();
+	exit();
 }
 use AgroEgw\Api\Categories;
 use AgroEgw\DB;
@@ -12,89 +12,89 @@ use CAO\Verkauf\Rechnung;
 ?>
 <link rel="stylesheet" type="text/css" href="/egroupware/cao/css/cao.css">
 <?php
-    require APPDIR.'/graph/views/check.php';
+	require APPDIR.'/graph/views/check.php';
 
-    $CAO_Addresses = (new Adressen())->GetAdresses();
-    $CAO_CONNECTIONS = [];
-    $warning_timesheets = [];
-    if (DEBUG_MODE) {
-        //Core::$Settings['status_settings']['status_import'] = 2;
-    }
+	$CAO_Addresses = (new Adressen())->GetAdresses();
+	$CAO_CONNECTIONS = [];
+	$warning_timesheets = [];
+	if (DEBUG_MODE) {
+		//Core::$Settings['status_settings']['status_import'] = 2;
+	}
 
-    $warn_display = 'none';
-    foreach ($CAO_Addresses as $key => $value) {
-        //Dump($value['cao_conn']['KUNNUM1']);
-    }
+	$warn_display = 'none';
+	foreach ($CAO_Addresses as $key => $value) {
+		//Dump($value['cao_conn']['KUNNUM1']);
+	}
 
-    $rechnungen = [];
-    $rechnungen['keine']['address'] = 'Fehlerhafte Stundenzettel!';
-    $rechnungen['keine']['children'] = [];
-    foreach (Rechnung::recieveTimesheets() as $key => $timesheet) {
-        $verknuepfung_adr = \EGroupware\Api\Link\Storage::get_links('timesheet', $timesheet['ts_id'], 'addressbook');
+	$rechnungen = [];
+	$rechnungen['keine']['address'] = 'Fehlerhafte Stundenzettel!';
+	$rechnungen['keine']['children'] = [];
+	foreach (Rechnung::recieveTimesheets() as $key => $timesheet) {
+		$verknuepfung_adr = \EGroupware\Api\Link\Storage::get_links('timesheet', $timesheet['ts_id'], 'addressbook');
 
-        // boolean, checks if there is an address linked with the timesheet
-        if ($toCheck = count($verknuepfung_adr) < 1) {
+		// boolean, checks if there is an address linked with the timesheet
+		if ($toCheck = count($verknuepfung_adr) < 1) {
 
-            // we fetch here the links between the timesheet and the project
-            $verknuepfung_proj = \EGroupware\Api\Link\Storage::get_links('timesheet', $timesheet['ts_id'], 'projectmanager');
+			// we fetch here the links between the timesheet and the project
+			$verknuepfung_proj = \EGroupware\Api\Link\Storage::get_links('timesheet', $timesheet['ts_id'], 'projectmanager');
 
-            // if the connection exists
-            if ($pr_id = array_values($verknuepfung_proj)[0]) {
+			// if the connection exists
+			if ($pr_id = array_values($verknuepfung_proj)[0]) {
 
-                // we check if there is an address linked with the project
-                $verknuepfung_adr = \EGroupware\Api\Link\Storage::get_links('projectmanager', $pr_id, 'addressbook');
+				// we check if there is an address linked with the project
+				$verknuepfung_adr = \EGroupware\Api\Link\Storage::get_links('projectmanager', $pr_id, 'addressbook');
 
-                // if there is an address linked with the project we set $toCheck to false
-                // in order to mark this dataset as linked with an address
-                if (count($verknuepfung_adr) < 1) {
-                    $toCheck = false;
-                }
-            }
-        }
+				// if there is an address linked with the project we set $toCheck to false
+				// in order to mark this dataset as linked with an address
+				if (count($verknuepfung_adr) < 1) {
+					$toCheck = false;
+				}
+			}
+		}
 
-        if (!is_numeric($timesheet['cat_id'])) {
-            $toCheck = true;
-        } elseif (!Core::CategoryExists($timesheet['cat_id'])) {
-            $toCheck = true;
-        }
+		if (!is_numeric($timesheet['cat_id'])) {
+			$toCheck = true;
+		} elseif (!Core::CategoryExists($timesheet['cat_id'])) {
+			$toCheck = true;
+		}
 
-        if ($toCheck) {
-            $rechnungen['keine']['children'][] = $timesheet;
-        } else {
-            $address_id = array_values($verknuepfung_adr)[0];
-            $KUNNUM = DB::Get("SELECT * FROM egw_addressbook_extra WHERE contact_name = 'cao kunden nr' AND contact_id = '$address_id'")['contact_value'];
+		if ($toCheck) {
+			$rechnungen['keine']['children'][] = $timesheet;
+		} else {
+			$address_id = array_values($verknuepfung_adr)[0];
+			$KUNNUM = DB::Get("SELECT * FROM egw_addressbook_extra WHERE contact_name = 'cao kunden nr' AND contact_id = '$address_id'")['contact_value'];
 
-            $address = DB::Get("SELECT * FROM egw_addressbook WHERE contact_id = '$address_id'");
-            if (Rechnung::isConnected($CAO_Addresses, 'contact_id', $address_id)) {
-                $rechnungen[$KUNNUM]['cao'] = true;
-                $rechnungen[$KUNNUM]['address'] = Rechnung::GroupByCao($KUNNUM);
-                $rechnungen[$KUNNUM]['address_id'] = $address_id;
-                $rechnungen[$KUNNUM]['children'][] = $timesheet;
-            } else {
-                $rechnungen['egw_'.$address_id]['cao'] = false;
-                $rechnungen['egw_'.$address_id]['address'] = $address['n_fileas'];
-                $rechnungen['egw_'.$address_id]['address_id'] = $address_id;
-                $rechnungen['egw_'.$address_id]['children'][] = $timesheet;
-            }
-        }
-    }
-    // Dump($CAO_CONNECTIONS);
+			$address = DB::Get("SELECT * FROM egw_addressbook WHERE contact_id = '$address_id'");
+			if (Rechnung::isConnected($CAO_Addresses, 'contact_id', $address_id)) {
+				$rechnungen[$KUNNUM]['cao'] = true;
+				$rechnungen[$KUNNUM]['address'] = Rechnung::GroupByCao($KUNNUM);
+				$rechnungen[$KUNNUM]['address_id'] = $address_id;
+				$rechnungen[$KUNNUM]['children'][] = $timesheet;
+			} else {
+				$rechnungen['egw_'.$address_id]['cao'] = false;
+				$rechnungen['egw_'.$address_id]['address'] = $address['n_fileas'];
+				$rechnungen['egw_'.$address_id]['address_id'] = $address_id;
+				$rechnungen['egw_'.$address_id]['children'][] = $timesheet;
+			}
+		}
+	}
+	// Dump($CAO_CONNECTIONS);
 
-    foreach ($rechnungen as $key => $rechnung) {
-        $gesamt_netto = 0;
-        foreach ($rechnung['children'] as $timesheet) {
-            $quantity = ($timesheet['ts_duration'] ? (($timesheet['ts_duration'] / 60).'h') : $timesheet['ts_quantity']);
-            $gesamt_netto += (floatval($quantity) * $timesheet['ts_unitprice']);
-            $ts_id = "t_$timesheet[ts_id]";
-            if (empty($timesheet['ts_unitprice'])) {
-                $warning_timesheets[] = $timesheet['ts_id'];
-                $warn_count++;
-                $warn_display = 'block';
-            }
-        }
-        $rechnungen[$key]['gesamt_netto'] = $gesamt_netto;
-    }
-    unset($rechnung);
+	foreach ($rechnungen as $key => $rechnung) {
+		$gesamt_netto = 0;
+		foreach ($rechnung['children'] as $timesheet) {
+			$quantity = ($timesheet['ts_duration'] ? (($timesheet['ts_duration'] / 60).'h') : $timesheet['ts_quantity']);
+			$gesamt_netto += (floatval($quantity) * $timesheet['ts_unitprice']);
+			$ts_id = "t_$timesheet[ts_id]";
+			if (empty($timesheet['ts_unitprice'])) {
+				$warning_timesheets[] = $timesheet['ts_id'];
+				$warn_count++;
+				$warn_display = 'block';
+			}
+		}
+		$rechnungen[$key]['gesamt_netto'] = $gesamt_netto;
+	}
+	unset($rechnung);
 ?>
 <script type="text/javascript" src="/egroupware/cao/js/lib/jquery.js"></script>
 <script type="text/javascript" src="/egroupware/cao/js/lib/jquery-ui.js"></script>
@@ -162,49 +162,49 @@ use CAO\Verkauf\Rechnung;
 					<!-- Respuestas de los comentarios -->
 					<ul class="list reply-list" <?php echo ($key == 'keine') ? 'style="display: block;"' : ''?>>
 						<?php
-                        foreach ($rechnung['children'] as $key => $timesheet) {
-                            $verknuepfung = \EGroupware\Api\Link\Storage::get_links('timesheet', $timesheet['ts_id'], 'addressbook');
-                            $user = DB::Get("SELECT * FROM egw_addressbook WHERE account_id = '".$timesheet['ts_owner']."'");
+						foreach ($rechnung['children'] as $key => $timesheet) {
+							$verknuepfung = \EGroupware\Api\Link\Storage::get_links('timesheet', $timesheet['ts_id'], 'addressbook');
+							$user = DB::Get("SELECT * FROM egw_addressbook WHERE account_id = '".$timesheet['ts_owner']."'");
 
-                            if (!is_numeric($timesheet['cat_id'])) {
-                                $categoryName = 'Keine Kategorie!';
-                                $categoryColor = '#e5e5e5';
-                            } else {
-                                $categoryName = Categories::getName($timesheet['cat_id']);
-                                $categoryColor = Categories::getColor($timesheet['cat_id']);
-                            }
+							if (!is_numeric($timesheet['cat_id'])) {
+								$categoryName = 'Keine Kategorie!';
+								$categoryColor = '#e5e5e5';
+							} else {
+								$categoryName = Categories::getName($timesheet['cat_id']);
+								$categoryColor = Categories::getColor($timesheet['cat_id']);
+							}
 
-                            switch ($categoryName) {
-                                case 'Arbeitszeit':
-                                    $unit = ' pro Stunde'; // per hour
-                                    $type = lang('Dauer');
-                                    $quantity = ($timesheet['ts_duration'] ? (($timesheet['ts_duration'] / 60).'h') : $timesheet['ts_quantity']);
-                                    break;
-                                case 'Hosting':
-                                case 'Sonstiges':
-                                case 'Hardware':
-                                    $unit = ' pro Stück'; // per piece
-                                    $type = lang('Menge');
-                                    $quantity = ($timesheet['ts_duration'] ? (($timesheet['ts_duration'] / 60).'h') : $timesheet['ts_quantity'].'stk');
-                                    break;
-                                case 'Fahrtkosten':
-                                    $unit = ' pro Kilometer'; // per kilometer
-                                    $type = lang('Länge');
-                                    $quantity = ($timesheet['ts_duration'] ? (($timesheet['ts_duration'] / 60).'h') : $timesheet['ts_quantity'].'km');
-                                    break;
-                                default:
-                                    $unit = ' pro Stunde'; // per hour
-                                    $type = lang('Dauer');
-                                    $quantity = ($timesheet['ts_duration'] ? (($timesheet['ts_duration'] / 60).'h') : $timesheet['ts_quantity']);
-                                    break;
-                            }
-                            $price = $timesheet['ts_unitprice'].'€'.$unit;
-                            $netto_price = (floatval($quantity) * $timesheet['ts_unitprice']).'€';
-                            if (empty($timesheet['ts_unitprice'])) {
-                                echo '<li class="errorBubble" >';
-                            } else {
-                                echo '<li>';
-                            } ?>
+							switch ($categoryName) {
+								case 'Arbeitszeit':
+									$unit = ' pro Stunde'; // per hour
+									$type = lang('Dauer');
+									$quantity = ($timesheet['ts_duration'] ? (($timesheet['ts_duration'] / 60).'h') : $timesheet['ts_quantity']);
+									break;
+								case 'Hosting':
+								case 'Sonstiges':
+								case 'Hardware':
+									$unit = ' pro Stück'; // per piece
+									$type = lang('Menge');
+									$quantity = ($timesheet['ts_duration'] ? (($timesheet['ts_duration'] / 60).'h') : $timesheet['ts_quantity'].'stk');
+									break;
+								case 'Fahrtkosten':
+									$unit = ' pro Kilometer'; // per kilometer
+									$type = lang('Länge');
+									$quantity = ($timesheet['ts_duration'] ? (($timesheet['ts_duration'] / 60).'h') : $timesheet['ts_quantity'].'km');
+									break;
+								default:
+									$unit = ' pro Stunde'; // per hour
+									$type = lang('Dauer');
+									$quantity = ($timesheet['ts_duration'] ? (($timesheet['ts_duration'] / 60).'h') : $timesheet['ts_quantity']);
+									break;
+							}
+							$price = $timesheet['ts_unitprice'].'€'.$unit;
+							$netto_price = (floatval($quantity) * $timesheet['ts_unitprice']).'€';
+							if (empty($timesheet['ts_unitprice'])) {
+								echo '<li class="errorBubble" >';
+							} else {
+								echo '<li>';
+							} ?>
 									<div id="t_<?php echo $timesheet['ts_id']?>" class="box">
 										<div class="head">
 											<h6 class="name<?php echo count($verknuepfung) >= 1 ? '' : ' no-address'?>"><?php echo $user['n_fn']?></h6>
@@ -238,8 +238,8 @@ use CAO\Verkauf\Rechnung;
 									</div>
 								</li>
 							<?php
-                        }
-                        ?>
+						}
+						?>
 					</ul>
 				</li>
 			<?php } ?>
