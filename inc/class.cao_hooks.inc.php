@@ -56,7 +56,7 @@ class cao_hooks
 		// echo "<p>ts_admin_prefs_sidebox_hooks::all_hooks(".print_r($args,True).") appname='$appname', location='$location'</p>\n";
 
 		if ($location == 'sidebox_menu') {
-			if (($GLOBALS['egw_info']['user']['apps']['admin'] && $location != 'admin') || ($GLOBALS['egw_info']['user']['account_id'] == '116')) {
+			// if (($GLOBALS['egw_info']['user']['apps']['admin'] && $location != 'admin') || ($GLOBALS['egw_info']['user']['account_id'] == '116')) {
 				$file = [
 					'Adressen'			  => Egw::link('/egroupware/cao/graph/stammdaten/address.php'),
 					'Artikel' 			  => Egw::link('/egroupware/cao/graph/stammdaten/artikel.php'),
@@ -78,19 +78,20 @@ class cao_hooks
 				];
 
 				display_sidebox($appname, 'Verkauf', $file);
-			}
+			// }
 
-			if ($GLOBALS['egw_info']['user']['apps']['admin'] && $location != 'admin') {
+			// if ($GLOBALS['egw_info']['user']['apps']['admin'] && $location != 'admin') {
 				$file = [
 					'Einstellungen' 	=> Egw::link('/egroupware/cao/graph/settings.php'),
 					'Datenbank' 		   => Egw::link('/egroupware/cao/graph/datenbank.php'),
 					'Hochladen' 		   => Egw::link('/egroupware/cao/graph/upload.php'),
 				];
-			}
-			display_sidebox($appname, 'Einstellung', $file);
+
+				display_sidebox($appname, 'Einstellung', $file);
+			// }
 		}
 
-		if ($GLOBALS['egw_info']['user']['apps']['admin'] && $location != 'preferences') {
+		if ($location != 'preferences') { // $GLOBALS['egw_info']['user']['apps']['admin'] && 
 			$file = [];
 
 			if ($location == 'admin') {
