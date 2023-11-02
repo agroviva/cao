@@ -40,6 +40,7 @@ class Lieferschein extends EinkaufTrait
 
 	public static function init_static()
 	{
+		# Pfand mit rein ziehen
 		self::$config['artikel'] = [
 			// EDEKA
 			'100665' => [ //Milch 1.8%
@@ -69,6 +70,11 @@ class Lieferschein extends EinkaufTrait
 			// Weiling
 			'100670' => [ //Milch
 				'100671',
+			],
+
+			// Demeter Heumilch
+			'100764' => [ //Magerquark
+				'100720',
 			],
 		];
 	}
