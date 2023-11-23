@@ -72,6 +72,11 @@ class Lieferschein extends EinkaufTrait
 				'100671',
 			],
 
+			// Alnatura
+			'100755' => [ //3,8 Milch
+				'100671',
+			],
+
 			// Demeter Heumilch
 			'100764' => [ //Magerquark
 				'100720',
