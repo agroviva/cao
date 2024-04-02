@@ -216,13 +216,14 @@ class Lieferschein extends EinkaufTrait
 					$MENGE = $POSITION['MENGE'];
 
 					$storageKey = 'ARTIKEL_NR_'.$POSITION['ARTIKELNUMMER'];
+					$artNMR = $POSITION['ARTIKELNUMMER'];
 					$sql = "
-                        SELECT A.*, B.ME 
-                            FROM ARTIKEL AS A LEFT JOIN ARTIKEL_LOG as B 
-                            ON A.REC_ID = B.ARTIKEL_ID 
-                        WHERE A.ARTNUM = '{$POSITION[ARTIKELNUMMER]}' 
-                        GROUP BY REC_ID
-                    ";
+			                        SELECT A.*, B.ME 
+			                            FROM ARTIKEL AS A LEFT JOIN ARTIKEL_LOG as B 
+			                            ON A.REC_ID = B.ARTIKEL_ID 
+			                        WHERE A.ARTNUM = '$artNMR' 
+			                        GROUP BY REC_ID
+			                    ";
 					$ARTIKEL = Core::Temp($storageKey)
 							?? Core::Temp($storageKey, Request::Run($sql)[0]);
 
@@ -238,13 +239,13 @@ class Lieferschein extends EinkaufTrait
 
 					$storageKey = 'ARTIKEL_PREIS_'.$POSITION['ARTIKELNUMMER'].'_'.$ADRESSE_ID;
 					$sql = "
-                        SELECT B.PREIS AS PREIS
-                            FROM ARTIKEL AS A LEFT JOIN ARTIKEL_PREIS as B 
-                            ON A.REC_ID = B.ARTIKEL_ID 
-                        WHERE A.ARTNUM = '{$POSITION[ARTIKELNUMMER]}' 
-                            AND B.ADRESS_ID = $ADRESSE_ID
-                        GROUP BY REC_ID
-                    ";
+			                        SELECT B.PREIS AS PREIS
+			                            FROM ARTIKEL AS A LEFT JOIN ARTIKEL_PREIS as B 
+			                            ON A.REC_ID = B.ARTIKEL_ID 
+			                        WHERE A.ARTNUM = '$artNMR' 
+			                            AND B.ADRESS_ID = $ADRESSE_ID
+			                        GROUP BY REC_ID
+			                    ";
 					$ARTIKEL_PREIS = Core::Temp($storageKey)
 							?? Core::Temp($storageKey, Request::Run($sql)[0]);
 					$ITEM_PREIS = $ARTIKEL['VK1'];
@@ -274,11 +275,12 @@ class Lieferschein extends EinkaufTrait
 					$LIEFERSCHEINPOS->add('VPE', $ARTIKEL['VPE']);
 
 					$storageKey = 'STEUERCODE_'.$ARTIKEL['STEUER_CODE'];
+					$artSTC = $ARTIKEL['STEUER_CODE'];
 					$sql = "
-                        SELECT * FROM REGISTRY 
-                        WHERE MAINKEY LIKE '%MAIN%MWST' 
-                            AND NAME = '$ARTIKEL[STEUER_CODE]';
-                    ";
+			                        SELECT * FROM REGISTRY 
+			                        WHERE MAINKEY LIKE '%MAIN%MWST' 
+			                            AND NAME = '$artSTC';
+			                    ";
 					$STEUER = Core::Temp($storageKey)
 							?? Core::Temp($storageKey, Request::Run($sql)[0]);
 
