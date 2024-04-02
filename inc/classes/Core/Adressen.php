@@ -136,7 +136,8 @@ class Adressen
 	{
 		$addresses = [];
 
-		$IN_KUNNUM = implode(',', (array) $this->relationships['cao']);
+		$IN_KUNNUM = implode(',', (array) $this->relationships['cao']) ?? 0;
+
 		$cao = Request::Run("
 			SELECT * FROM ADRESSEN 
 			WHERE KUNNUM1 IN($IN_KUNNUM)
