@@ -74,7 +74,7 @@ class Request
 				exit();
 			}
 
-			var_dump($Query);
+			#var_dump($Query);
 			
 			if (!$InsertID) {
 				$result = $mysqli->query($Query);
