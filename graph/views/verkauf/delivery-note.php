@@ -146,6 +146,7 @@ class FileRenderingUI
 			var ASK = "<?php echo $GLOBALS['ConfArr']['ask']?>";
 			var SUCCESS = "<?php echo $GLOBALS['ConfArr']['success']?>";
 		</script>
+		<script type="text/javascript" src="/egroupware/cao/js/Settings.js"></script>
 		<script type="text/javascript" src="/egroupware/cao/js/FileSaving.js"></script>
 		<?php
 	}
