@@ -140,8 +140,6 @@ class Adressen
 		if(empty($IN_KUNNUM)){
 			$IN_KUNNUM = 0;
 		}
-
-		var_dump($IN_KUNNUM);
 		
 		$cao = Request::Run("
 			SELECT * FROM ADRESSEN 
