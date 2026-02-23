@@ -115,7 +115,7 @@ class Rechnung
 			$MWST_2 = 7.00;
 			$MWST_3 = 10.70;
 
-			$TERM_ID = $LastBill['TERM_ID']; // "Terminal (Windowsitzung)";
+			$TERM_ID = 1; //$LastBill['TERM_ID']; // "Terminal (Windowsitzung)";
 			$MA_ID = MA_ID; //"Mitarbeiter ID"; // default ist -1
 			$QUELLE = 13;
 			$QUELLE_SUB = 0;
@@ -294,6 +294,7 @@ class Rechnung
 			WHERE (QUELLE = '13' AND QUELLE_SUB = '0') 
 				AND KUN_NUM = '$KUNNUM' 
 				ORDER BY REC_ID DESC
+
 		");
 
 		if ($return) {
